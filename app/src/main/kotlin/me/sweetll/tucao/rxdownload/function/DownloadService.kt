@@ -28,6 +28,7 @@ import me.sweetll.tucao.rxdownload.entity.DownloadBean
 import me.sweetll.tucao.rxdownload.entity.DownloadEvent
 import me.sweetll.tucao.rxdownload.entity.DownloadMission
 import me.sweetll.tucao.rxdownload.entity.DownloadStatus
+import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -35,6 +36,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.net.CookieManager
+import java.net.CookiePolicy
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
@@ -58,13 +61,16 @@ class DownloadService : Service() {
     }
 
     lateinit var binder: DownloadBinder
+    var cookieManager:CookieManager = CookieManager()
 
     val downloadApi: DownloadApi by lazy {
+		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         Retrofit.Builder()
                 .baseUrl(ApiConfig.BASE_RAW_API_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(
                         OkHttpClient.Builder()
+                                .cookieJar(JavaNetCookieJar(cookieManager))
                                 .addInterceptor(HttpLoggingInterceptor())
                                 .build()
                 )
