@@ -36,6 +36,7 @@ class DownloadedFragment: BaseFragment(), DownloadActivity.ContextMenuCallback {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+		videoAdapter.setNewData(DownloadHelpers.loadDownloadedVideos())
     }
 
     fun setupRecyclerView() {
