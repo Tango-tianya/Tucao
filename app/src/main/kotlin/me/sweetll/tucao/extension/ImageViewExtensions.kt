@@ -16,8 +16,12 @@ import com.bumptech.glide.signature.ObjectKey
 import me.sweetll.tucao.R
 
 fun ImageView.load(context: Context, url: String) {
+	var imgUrl = url
+	if (imgUrl.startsWith("http://tucao.one")||imgUrl.startsWith("http://www.tucao.one")){
+		imgUrl = """https${imgUrl.substring(4)}"""
+	}
     GlideApp.with(context)
-            .load(url)
+            .load(imgUrl)
             .transition(withCrossFade())
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(this)
